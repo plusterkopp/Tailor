@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>de.pkmd</groupId>
+    <artifactId>tailor</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>Tailor</name>
+    <description>Cross-platform live log viewer in the spirit of BareTail</description>
+
+    <properties>
+        <maven.compiler.release>21</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <main.class>de.pkmd.tailor.Tailor</main.class>
+
+        <flatlaf.version>3.8</flatlaf.version>
+        <gson.version>2.15.0</gson.version>
+        <junit.version>5.14.4</junit.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf</artifactId>
+            <version>${flatlaf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>${gson.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.14.0</version>
+                <configuration>
+                    <compilerArgs>
+                        <arg>-Xlint:all,-serial,-processing</arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.5.4</version>
+                <configuration>
+                    <systemPropertyVariables>
+                        <java.awt.headless>true</java.awt.headless>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.4.2</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>${main.class}</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <!-- target/tailor-<version>-all.jar: runnable with "java -jar" -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.6.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <shadedArtifactAttached>true</shadedArtifactAttached>
+                            <shadedClassifierName>all</shadedClassifierName>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                        <exclude>module-info.class</exclude>
+                                        <exclude>META-INF/versions/*/module-info.class</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>${main.class}</mainClass>
+                                    <manifestEntries>
+                                        <Multi-Release>true</Multi-Release>
+                                    </manifestEntries>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- mvn exec:java  starts the viewer from the build directory -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.5.1</version>
+                <configuration>
+                    <mainClass>${main.class}</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

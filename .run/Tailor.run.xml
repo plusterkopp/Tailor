@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Tailor" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="de.pkmd.tailor.Tailor" />
+    <module name="tailor" />
+    <option name="PROGRAM_PARAMETERS" value="" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

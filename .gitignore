@@ -1,0 +1,14 @@
+# Build output
+target/
+*.class
+
+# IntelliJ IDEA (project files are generated from the Maven pom)
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# OS / editor
+.DS_Store
+*~
